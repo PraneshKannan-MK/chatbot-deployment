@@ -1,0 +1,29 @@
+# Python
+venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.log
+
+# Git
+.git/
+.gitignore
+
+# Streamlit
+.streamlit/
+
+# Caches (VERY IMPORTANT)
+.cache/
+**/.cache/
+
+# Node / frontend
+node_modules/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Archives
+*.tar
+*.zip

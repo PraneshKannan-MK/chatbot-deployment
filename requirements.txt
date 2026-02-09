@@ -1,0 +1,28 @@
+# ---- Core backend ----
+fastapi
+uvicorn[standard]
+pydantic
+
+# ---- Streamlit UI ----
+streamlit
+requests
+
+# ---- LangChain stack ----
+langchain
+langchain-community
+langchain-huggingface
+
+# ---- Embeddings ----
+sentence-transformers
+huggingface-hub
+
+# ---- Vector search ----
+faiss-cpu
+rank-bm25
+
+# ---- LLM (GGUF) ----
+llama-cpp-python
+
+# ---- Utilities ----
+numpy
+scipy
