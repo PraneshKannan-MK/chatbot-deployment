@@ -1,18 +1,15 @@
-# Base image with CUDA support
-FROM nvidia/cuda:12.1.1-runtime-ubuntu22.04
+# -------- CPU Optimized Base Image --------
+FROM python:3.10-slim
 
 # Environment settings
-ENV DEBIAN_FRONTEND=noninteractive \
-    PYTHONDONTWRITEBYTECODE=1 \
+ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# Set working directory
+# Working directory
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies (minimal)
 RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
     build-essential \
     cmake \
     git \
@@ -20,21 +17,24 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Upgrade pip
-RUN python3 -m pip install --upgrade pip
+RUN pip install --upgrade pip
 
-# Copy requirements first (cache-friendly)
+# VERY IMPORTANT: Install CPU-only Torch BEFORE requirements
+RUN pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+# Copy requirements first (better caching)
 COPY requirements.txt .
 
-# Install Python dependencies
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy app code
 COPY . .
 
 # Expose ports
 EXPOSE 8000 8501
 
-# Use exec form + proper signal handling
+# Start services
 CMD ["bash", "-c", "\
 uvicorn backend.main:app --host 0.0.0.0 --port 8000 & \
 exec streamlit run ui/streamlit.py --server.port 8501 --server.address 0.0.0.0 \
